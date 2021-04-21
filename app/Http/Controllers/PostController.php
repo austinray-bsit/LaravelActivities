@@ -43,10 +43,33 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
+
+        $request->validate([
+            'title' => 'required|max:100',
+            'description' => 'required'
+        ]);
+
+        if($request->hasFile('img')){
+
+            $filenameWithExt = $request->file('img')->getClientOriginalName();
+
+            $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
+
+            $extension = $request->file('img')->getClientOriginalExtension();
+
+            $filenameToStore = $filename.'_'.time().'.'.$extension;
+
+            $path = $request->file('img')->storeAs('public/img', $filenameToStore);
+        } else{
+
+            $filenameToStore = '';
+        }
+
         // Store value from your form
         $post = new Post();
         $post->title = $request->title;
         $post->description = $request->description;
+        $post->img = $filenameToStore;
         $post->save();
 
         return redirect('/posts');
@@ -88,6 +111,11 @@ class PostController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $request->validate([
+            'title' => 'required|max:100',
+            'description' => 'required'
+        ]);
+        
         // Store updated resource
         $post = Post::find($id);
         $post->title = $request->title;
