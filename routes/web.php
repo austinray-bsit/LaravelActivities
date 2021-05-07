@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\PostController; // Import the PostCtrl
+// use App\Http\Controllers\PostController; // Import the PostCtrl
 
 /*
 |--------------------------------------------------------------------------
@@ -14,18 +14,17 @@ use App\Http\Controllers\PostController; // Import the PostCtrl
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('index');
+
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/home', function(){
+    return redirect('/posts');
+});
 
-Route::get('/posts', [PostController::class, 'index'])->middleware('auth.basic'); 
-Route::get('/posts/create', [PostController::class, 'create'])->middleware('auth.basic');
-Route::post('/posts', [PostController::class, 'store'])->name('posts.store')->middleware('auth.basic');
-Route::get('/posts/{id}', [PostController::class, 'show'])->middleware('auth.basic');
-Route::get('/posts/{id}/edit', [PostController::class, 'edit'])->middleware('auth.basic');
-Route::patch('/posts/{id}', [PostController::class, 'update'])->name('posts.update')->middleware('auth.basic');
-Route::delete('/posts/{id}', [PostController::class, 'destroy'])->name('posts.destroy')->middleware('auth.basic');
+Route::get('/delete-blank-post', [App\Http\Controllers\PostController::class, 'deleteBlank']);
+Route::get('/posts-archive', [App\Http\Controllers\PostController::class, 'archive']);
+Route::get('/posts/{id}/restore', [App\Http\Controllers\PostController::class, 'restore']);
+Route::resource('/posts', App\Http\Controllers\PostController::class);
+Route::resource('/comments', App\Http\Controllers\CommentController::class);

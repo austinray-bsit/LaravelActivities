@@ -1,22 +1,24 @@
-  
 @extends('layouts.app')
 
 @section('content')
-    
+
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
-           
-            <a class="btn button btn-primary" style="margin-bottom:20px;" href="/posts/create">Create New</a>
-            <a class="btn button btn-success" style="margin-bottom:20px;" href="/posts">Go Back</a>
-            
             <div class="card">       
                 <div class="card-body">
-                    Title : {{ $post->Title }} <br>
-                    Description : {{ $post->Description }} <br>
-                    Created At : {{ $post->created_at }} <br>
-                    Post Image: 
-                    <img src="{{ asset('/storage/img/'.$post->img)}} ">
+
+                    <a  href="/posts/{{$post->id}}/edit" class="btn btn-warning"> Edit </a> 
+                        <br>
+                        Title: {{ $post->title }} <br>
+                        Description: {{ $post->description }} <br>
+                        Created At: {{ $post->created_at }}  <br>
+                        @if ($post->img != '')
+                         Image: 
+                        <img src="{{ asset('/storage/img/'.$post->img) }}">
+                        @endif
+                        
+                        @include('/posts/comments')
                 </div>
             </div>
         </div>
